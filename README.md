@@ -7,7 +7,7 @@ This repository implements the Framework for the Job Shop Scheduling Problem wit
 - `src/jssp_agv`: Training files (train_gnn_aec.py, train_gnn_jssp.py,train_gnn_agv.py), experiment configs and executable files, dispatcher for training, component setup, and GNN models. 
 - `src/jssp_gnn`: Basic components for the training. The GNN models are defined in the jssp_agv folder.
 - `config`: Config files for the training
-- `json_export`: Data of the experiments in JSON.
+- `Release:json_export`: Data of the experiments in JSON.
 - `src/jssp_agv/paper_experiments_results.ipynb`: Notebook with the paper plots from the experiment data.
 
 
