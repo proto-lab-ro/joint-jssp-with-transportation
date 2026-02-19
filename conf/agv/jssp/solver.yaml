@@ -1,0 +1,5 @@
+# @package jssp
+ml_policy: true
+heuristic: false
+heuristic_name:  scpt # sput  random scta scpt
+ml_path: model_repo/01-25_20-27-15_M_agv/checkpoints/policy_module_final.pt

@@ -1,0 +1,3 @@
+# @package gnn_feature_extractor
+hidden_dim: 64
+k_layers: 2

@@ -1,0 +1,6 @@
+# @package agv
+ml_policy: false
+heuristic: true
+heuristic_name: mor # spt smpt, lpt mwr lwr fddmwr mor lor random fcfs
+ml_path: model_repo/01-29_07-37-35_M_jssp/checkpoints/policy_module_final.pt
+

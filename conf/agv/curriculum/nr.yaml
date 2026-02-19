@@ -1,0 +1,18 @@
+# @package curriculum
+
+  # Stage 0: Start with default configuration (ft06)
+  # The configuration is inherited from 'defaults' (gnn_ft06), so we don't need to repeat it here.
+interval:
+  nr_instances_multiplier: 4
+  sub_batch_size_1: true
+  nr_repeat_rollout: 1
+  type: "number"
+env:
+  instance:
+    - "jssp_instances/transport/ft06" #6x6
+    - "jssp_instances/transport/ft10" #10x10
+    - "jssp_instances/transport/ft20" #20x5
+    - "jssp_instances/transport/la24" #15x10
+    - "jssp_instances/transport/la32" #30x10
+
+  number_agvs: "random"

@@ -1,0 +1,21 @@
+# @package env
+instance: "jssp_instances/transport/ft06"
+random_instance: true
+instance_generator: "transport_random_uniform"
+instance_generator_kwargs:
+  min_duration: 1
+  max_duration: 100
+reward_function: "negative_sparse_makespan"
+reward_kwargs:
+  scaling_factor: 5.0
+job_observation_provider: "lb_bipartite_gnn"
+
+job_observation_kwargs: { self_loop: false,observation_type: "graph_matrix", normalize: "operation" }
+
+
+agv_observation_provider: "default"
+agv_observation_kwargs: {observation_type: "dict"}
+max_episode_steps: 1000
+number_agvs: 3
+job_selector_type: "operation"
+critic: "SB3LikeCriticMatrix_ohneAGV" 

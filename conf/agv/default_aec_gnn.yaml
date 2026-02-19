@@ -1,0 +1,38 @@
+# Main Hydra configuration file
+# @package _global_
+
+defaults:
+  - env: ft06_gnn
+  - training: default
+  - gnn: l2d
+  - experiment: null
+  - pretrain: default
+  - hpo: default #not triggered by default
+  - marl: aec
+  - evaluation: standard_with_model_saving
+  - finetune: none
+  - curriculum: nr
+
+  - _self_
+seed: 42
+
+
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%m-%d}_${now:%H-%M-%S}_M_LFalse_FTFalse
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%m-%d}_${now:%H-%M-%S}_M_LFalse_FTFalse
+    subdir: ${hydra:job.num}
+  job:
+    chdir: false
+
+# Logging and output directories
+log_dir: ${hydra:runtime.output_dir}/logs
+save_dir: ${hydra:runtime.output_dir}/checkpoints
+
+# Device configuration (will be set automatically)
+device: auto
+
+env:
+  critic: "SB3LikeCriticMatrix_ohneAGV"
