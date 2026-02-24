@@ -101,22 +101,16 @@ class LbGnnBipartiteObservationProvider(ObservationProvider):
                 f"{ObservationType.GRAPH} and {ObservationType.GRAPH_MATRIX} are allowed."
             )
 
-        # --- (2) Shared feature schema --------------------------------------------
-        # Operation features: [CLB_norm, is_scheduled]
-        # Machine features:   [progress_norm, 0]
-        # + 1 type flag (is_machine)
-        # Total = 3 features per node (minimal version)
         self.num_node_features = 3
 
-        # Mapping operation -> node index
-        # --- Varying per instance ---
+
         self.op_node_id = {}
         node_id = 0
         for job_idx, job in enumerate(schedule.instance):
             for op_idx in range(len(job)):
                 self.op_node_id[(job_idx, op_idx)] = node_id
                 node_id += 1
-        self.machine_offset = node_id  # machine nodes start after all operations
+        self.machine_offset = node_id  
 
     def _estimate_max_edges(self, schedule: Schedule) -> int:
         """
@@ -128,7 +122,7 @@ class LbGnnBipartiteObservationProvider(ObservationProvider):
             if self.both_directions:
                 precedence_edges *= 2
 
-        op_machine_edges = self.num_ops * 2  # op->machine and machine->op for each op
+        op_machine_edges = self.num_ops * 2  
         self_loop_edges = self.num_ops + self.num_machines if self.self_loop else 0
 
         return precedence_edges + op_machine_edges + self_loop_edges
@@ -156,7 +150,7 @@ class LbGnnBipartiteObservationProvider(ObservationProvider):
             for op_idx in range(len(job)):
                 self.op_node_id[(job_idx, op_idx)] = node_id
                 node_id += 1
-        self.machine_offset = node_id  # machine nodes start after all operations
+        self.machine_offset = node_id  
 
     def get_observation_space(self) -> spaces.Space:
         return spaces.Dict(
@@ -212,7 +206,7 @@ class LbGnnBipartiteObservationProvider(ObservationProvider):
                     lb_norm /= self.scale
                 feats[node, 0] = lb_norm
                 feats[node, 1] = float((job_idx, op_idx) in scheduled_ops)
-                feats[node, 2] = 0.0  # is_machine flag
+                feats[node, 2] = 0.0  
         if self.normalize == GraphNormalization.OPERATION:
             feats[:, 0] = self._normalize_by_all_operations(feats[:, 0])
 
@@ -279,7 +273,7 @@ class LbGnnBipartiteObservationProvider(ObservationProvider):
             for n in range(self.num_ops + self.num_machines):
                 edges.append((n, n))
 
-        edge_index = np.array(edges, dtype=np.int64).T  # [2, num_edges]
+        edge_index = np.array(edges, dtype=np.int64).T  
 
         if edge_index.shape[1] > self.max_edges:
             raise ValueError(
@@ -302,7 +296,7 @@ class LbGnnBipartiteObservationProvider(ObservationProvider):
             return convert_dict_spec(self.get_observation_space())
 
 
-# Registry of available observation providers (deprecated, use OBSERVATION_REGISTRY)
+
 OBSERVATION_PROVIDERS = OBSERVATION_REGISTRY._registry
 
 
@@ -325,7 +319,7 @@ def get_observation_provider(
     """
     provider_class = OBSERVATION_REGISTRY.get(name)
 
-    # Inspect __init__ to see what it actually accepts
+   
     sig = inspect.signature(provider_class.__init__)
     params = sig.parameters
 
@@ -333,12 +327,8 @@ def get_observation_provider(
     has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params.values())
 
     if has_var_kw:
-        # For providers that explicitly say "I accept **kwargs",
-        # pass everything and let the class decide what to do.
-        # (They can use the pop+warn pattern inside.)
         return provider_class(schedule, **kwargs)
 
-    # Otherwise, limit kwargs to the declared parameters and warn on the rest
     accepted_names = {
         name
         for name, p in params.items()

@@ -451,12 +451,12 @@ class TransportSchedule(Schedule):
         agv_entries: dict[int, list[dict]] = defaultdict(list)
 
         for idx, entry in enumerate(self.scheduled_agvs):
-            # Support multiple legacy/new shapes. Goal: extract agv_id, optional timing dict, and job tuple.
+            
             agv_id = None
             jobop = None
             agv_time_dict = None
 
-            # entry might be a tuple/list
+            
             if not isinstance(entry, (list, tuple)):
                 violations.append(
                     f"scheduled_agvs[{idx}] has invalid type: {type(entry)}"

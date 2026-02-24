@@ -163,7 +163,7 @@ class Schedule:
                 return (job_id, op_id)
             current_index += job_length
 
-        # This should never happen if flat_index is within bounds
+        
         raise RuntimeError(
             f"Failed to convert flat_index {flat_index} to (job_id, op_id)"
         )
@@ -373,17 +373,17 @@ class Schedule:
             Estimated completion time (makespan)
         """
 
-        # Lazy import to avoid circular dependency
+        
         from jssp_core.solver.heuristic_solver import JSSPHeuristicSolver
 
-        # Create a partial solution from the current schedule state
+        
         partial_solution = Schedule(self.instance)
 
-        # Add all currently scheduled operations
+        
         for (job_id, op_id), start_time in self.scheduled.items():
             partial_solution.add_operation(job_id, op_id, start_time)
 
-        # Use heuristic solver to complete the schedule from current state
+        
         solver = JSSPHeuristicSolver(self.instance)
         complete_solution = solver.continue_from_partial_solution(
             partial_solution, heuristic

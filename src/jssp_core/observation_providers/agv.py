@@ -210,7 +210,7 @@ class BaseAgvMarlObservationProvider(ObservationProvider):
             )
 
     def _normalize_feature(self, feature: np.ndarray) -> np.ndarray:
-        """Normalize feature to [0, 1] range based on max value in the schedule."""
+        """Normalize feature to [-1, 1] range based on max value in the schedule."""
 
         max_value = np.max(feature) if np.max(feature) > 0 else 1.0
         min_value = np.min(feature) if np.min(feature) < 0 else -1.0
@@ -228,22 +228,13 @@ class AGV_MARL(BaseAgvMarlObservationProvider):
         observation_type: ObservationType = ObservationType.DICT,
     ):
         super().__init__(schedule, observation_type)
-        self.num_features = 6  # CTa, PUT, CTaPUT, CTaPUTandTT, CTm, CTj
+        self.num_features = 6  
 
     @property
     def name(self) -> str:
         return "agv_marl_default"
 
     def get_observation(self, schedule: Schedule) -> ObservationData:
-        # CTa -> Shortest Completing Time (Available Time)
-        # PUT -> Pick up Time
-        # TT: -> Transport time of agv to the selected machine (from_loc to to_loc) -> Same for all agvs
-        # CTaPUTandTT: -> CTa + PUT + TT
-
-        # EAT: -> Earliest Available Time of the selected Job
-        # EWT: -> Estimated weighted Tardiness of the selected Job -X
-        # CTm: -> Shortest completion time of the machine -> next available time of the machine
-
         if not isinstance(schedule, TransportSchedule):
             return {
                 "feat": torch.zeros(
@@ -295,7 +286,7 @@ class AGV_MARL(BaseAgvMarlObservationProvider):
             machine_id=next_processing_machine_id,
             status=status,
         )
-        # Scalieren basierend auf anderen Jobs und Machinen?
+       
         CTj = self.feat_CTj(schedule)
 
         temp_obs_dict = {
@@ -311,7 +302,7 @@ class AGV_MARL(BaseAgvMarlObservationProvider):
                 [torch.tensor(v) for v in temp_obs_dict.values()], dim=1
             )
         }
-        # Now shape is (num_agvs, num_feats)
+        
 
         if self.observation_type == ObservationType.FLAT:
             return self.flatten_tensordict(obs_dict)
