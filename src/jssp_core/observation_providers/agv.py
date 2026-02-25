@@ -210,7 +210,7 @@ class BaseAgvMarlObservationProvider(ObservationProvider):
             )
 
     def _normalize_feature(self, feature: np.ndarray) -> np.ndarray:
-        """Normalize feature to [-1, 1] range based on max value in the schedule."""
+        """Normalize feature to [0, 1] range based on max value in the schedule."""
 
         max_value = np.max(feature) if np.max(feature) > 0 else 1.0
         min_value = np.min(feature) if np.min(feature) < 0 else -1.0
